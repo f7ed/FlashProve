@@ -1,0 +1,40 @@
+# date (UTC): Sun Nov 22 02:55:17 UTC 2026
+## nvidia-smi
+Sun Nov 22 02:55:17 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 620.70.06              KMD Version: 620.70.06     CUDA UMD Version: 13.5     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 PCIe               On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   31C    P0             49W /  350W |       0MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+## nvidia-smi query
+name, compute_cap, memory.total [MiB], driver_version
+NVIDIA H100 PCIe, 9.0, 81559 MiB, 620.70.06
+## CPU
+model name	: AMD EPYC 7713 64-Core Processor
+128
+sha_ni
+## OS / kernel
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+7.0.0-43-generic
+## compilers
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Cuda compilation tools, release 13.2, V13.2.86
+Build cuda_13.2.r13.2/compiler.37953736_0
+## container memory limit (bytes)
+780689997824
+## disk
+overlay          50G  2.4G   48G   5% /
