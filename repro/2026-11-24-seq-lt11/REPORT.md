@@ -1,6 +1,6 @@
 # FlashProve 序列长度实验：T = 2,048（lt 11），Vast.ai 单卡 H100（2026-11-24）
 
-状态：**进行中**。GPU 上的运行还没有结果。本页先记录已经确定的事实。
+状态：**进行中**。T = 2,048 已经端到端跑通（`YES`，退出码 0，见「T = 2,048 的运行结果」）。测量系列和 T = 1,024 的同机对照还在进行。
 
 ## 结论（到目前为止）
 
@@ -169,6 +169,74 @@ cp_verify -plan arrays <folder> 128
 尝试 1 期间的 GPU 状态（每 5 秒采样一次）：大部分时间处于 `SW Thermal Slowdown`（温度降频），87–89 °C，SM 时钟 1,065–1,395 MHz（最高 1,755），功耗 290–320 W。建表阶段显存 54.5 GB。主机内存：cgroup 用量约 241 GB。
 
 T = 2,048 的 accounting（规划调用）：69,626 轮；所有轮的误差相加 $2^{-119.25}$（带 proof of work；T = 1,024 是 $2^{-119.38}$）；smallness test 的联合界 $2^{-113.12}$，29,946 列（T = 1,024：$2^{-113.44}$，24,086 列）。
+
+
+## T = 2,048 的运行结果（路线 A，实例 62288104）
+
+被抢占 6 次以后，我们换到一台按需（on-demand）实例，它不会被抢占：Vast.ai 实例 62288104，机器 114842，Virginia。
+
+| 项目 | 值 |
+|---|---|
+| GPU | NVIDIA H100 NVL，95,830 MiB 显存，compute capability 9.0 |
+| 驱动 | 595.91.07 |
+| CPU | AMD EPYC 9V84，40 核（虚拟机），有 `sha_ni` |
+| 主机内存 | 314 GB；cgroup 上限 324,368,596,992 字节（约 324 GB） |
+| 硬盘 | 511 GB |
+| 价格 | $3.428/hr（按需） |
+
+程序从提交 `d1cc7d98` 构建（含两处代码改动），参数文件是路线 A 的（V = 202,048）。命令和 11 月 21 日一样：
+
+```
+W=$(mktemp -d) && WORK="$W/example"
+prover/examples/run_target_example.sh target_full_f2_lt11 "$WORK"
+```
+
+| 项目 | 值 |
+|---|---|
+| 脚本退出码 | 0（04:15:43–04:51:13 UTC，共 35 分 30 秒） |
+| `cp_commit` 打印的 commitment ID | `6fd5d0bbe0d9d5f9eb25f9b1926e5c51aab6dddcca2e5e0c1560c181b6ca963f` |
+| 传给 `cp_verify` 的 commitment ID | 同上 |
+| `cp_verify` 退出码和最后一行 | `status 0`，`YES` |
+| `covered:` 里的 `r=` 和 `e=` | `r=2047 e=2048`（`tokens=none y=yes`：只证明窗口后的下一个 token） |
+| 证明的答案 | token 98477；key 3,293,304 字节，entry 2,943,288 字节，proof 24,464,564 字节（T = 1,024：18,785,436） |
+| `cp_prove` 用时 | 约 66 秒，含启动（请求文件 04:49:05 放好，proof 04:50:11 写完） |
+| `cp_verify` 用时 | 约 61 秒，单线程（04:50:12–04:51:13） |
+
+`commitment:`、`proof of work:` 和 `result-v1` 开头的几行：
+
+```
+commitment: 86 closeness rounds of the one-time files rest on another source than the bound within a third of the distance; the table has a record: the binding of the weights rests on the theorem on codes (ePrint 2025/2055, Theorem 4.6), taken as given
+proof of work: up to 32 bits counted in 71 rounds; with it the least round has 128.00 bits, without it 96.23 bits
+```
+
+（`result-v1` 行见 [logs/t2048/cp_verify.log](logs/t2048/cp_verify.log)。）
+
+**这个 `YES` 是改过的 C++ 验证器给的**（提交 `78092cbc` 和 `d1cc7d98`）。发布版的验证器在 lt 11 下不会给 `YES`。
+
+### `cp_commit` 各阶段用时：T = 2,048 对 T = 1,024
+
+| 阶段 | T = 1,024（11 月 21 日，H100 PCIe，降频中） | T = 2,048（H100 NVL） |
+|---|---|---|
+| 锁定 236.9 GB 主机内存 | 43.4 s | 19.3 s |
+| weights | 65.9 s（含锁定） | 27.3 s |
+| check（最坏情况检查） | 634.6 s | 429.7 s |
+| anchor-table（表的树） | 977.8 s | 581.5 s |
+| key-file | 414.3 s | 277.7 s |
+| leaf-0-table | 约 18 分钟 | 581.5 s |
+| leaf-0-entry | — | 64.1 s |
+| 合计 | 约 53 分钟 | 32 分 53 秒 |
+
+承诺的工作量由权重决定，不由 T 决定，所以两列的差别主要是 GPU 的差别（NVL 没有降频：温度峰值 80 °C，忙时 SM 时钟平均约 1,438 MHz；PCIe 当时 87 °C、约 1,100 MHz）。在同一台 PCIe 卡上，T = 2,048 的 check 用了 639.9–640.1 s，和 T = 1,024 的 634.6 s 一样（被抢占的尝试里测到的）。
+
+### 内存
+
+| 项目 | 值 |
+|---|---|
+| GPU 显存峰值（整次运行，每 5 秒采样） | 92,277 MiB（这张卡 95,830 MiB） |
+| 主机内存峰值（cgroup `memory.current`） | 269,851,451,392 字节（约 270 GB） |
+| 主机内存峰值（`MemTotal − MemAvailable`） | 268,767,996 kB（约 269 GB） |
+
+显存峰值离这张卡的上限只差约 3.5 GB。在 80 GB 的卡上，同一个程序在 key 文件阶段的显存样本是约 75 GB（被抢占的尝试里测到的）：那张卡放得下承诺阶段，`cp_prove` 阶段是否放得下没有测到。
 
 ## 费用
 
