@@ -292,6 +292,34 @@ exact-match 策略下，被覆盖的每个 token 必须是模型在它前面所�
 
 日志（`report.txt`、`figures.json`、`cp_prove.txt`、每次 `cp_verify` 的输出）：[logs/t2048/measure_rate/](logs/t2048/measure_rate/)。采样 CSV（每 5 秒：GPU 利用率、显存、SM 时钟、温度、功耗、降频原因、主机已用/可用内存、cgroup 用量）：同一目录的 `sample-lt11.csv`。
 
+## T = 1,024 的同机对照（实例 62288104）
+
+用同一套程序（提交 `d1cc7d98`）对仓库自带的 `target_full_f2`（T = 1,024，V = 202,048）再做一次承诺和运行。它自带 `own_choices.req`：24 个 token 的提示词加 1,000 个模型首选 token，proof 覆盖这 1,000 个 token 和 y。
+
+```
+prover/examples/run_target_example.sh target_full_f2 "$WORK"
+```
+
+| 项目 | T = 1,024（本机） | T = 2,048（本机） |
+|---|---|---|
+| 脚本退出码 | 0（05:59:28–06:34:41 UTC） | 0 |
+| commitment ID（`cp_commit` 打印，传给 `cp_verify`） | `5e754eefdbb5f9da84bc171272722f723d2e9e7aa6d501b9994b59ea255c052d` | `6fd5d0bb…ca963f` |
+| `cp_verify` 退出码和最后一行 | `status 0`，`YES` | 同 |
+| `covered:` | `r=23 e=1024`，`tokens=24..1023 y=yes` | `r=2047 e=2048`，`tokens=none y=yes` |
+| 答案 | token 52599（和 11 月 21 日的运行一致），key 3,295,936，entry 2,943,392，proof 18,757,148 字节 | token 98477，proof 24,464,564 字节 |
+| `cp_commit` 各阶段 | 锁定内存 20.3 s；weights 28.4 s；check 429.5 s；anchor-table 581.5 s；key-file 277.5 s；leaf-0-table 581.7 s；leaf-0-entry 60.8 s；共 32 分 49 秒 | 19.3 / 27.3 / 429.7 / 581.5 / 277.7 / 581.5 / 64.1 s；共 32 分 53 秒 |
+| `cp_prove`（请求放好到 proof 写出） | 63 s | 66 s |
+| `cp_verify` 三阶段（key / leaf / request） | 1.4 / 1.0 / 19.4 s | 1.4 / 1.0 / 29.4 s |
+
+结论：
+
+- 承诺的时间和 T 无关：两次的每个阶段都只差零点几秒。承诺只处理权重。
+- 单个请求的 `cp_prove` 时间几乎和 T 无关（63 对 66 秒）：单请求时主要的开销是把 236.9 GB 的权重过一遍，不是 token 的计算。
+- proof 大小增加 30%（18.76 MB → 24.46 MB），`cp_verify` 的 request 阶段增加 52%（19.4 → 29.4 s）。
+- 这两个 `YES` 都来自改过的 C++ 验证器。在 lt 10 下，改动的两处条件（`rotary-table` 对 theta0 = 500,000、forest 键数 < $2^{32}$）和发布版的判定相同，所以 T = 1,024 这次的结果预期和发布版一致，但没有用发布版重跑验证。
+
+日志：[logs/t1024/](logs/t1024/)。
+
 ## 费用
 
 实例从 2026-11-23 约 23:25 UTC 开始计费，$0.744–0.779/hr。最终费用在销毁实例以后补上。
