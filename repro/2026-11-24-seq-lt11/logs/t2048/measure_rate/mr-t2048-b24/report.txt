@@ -1,0 +1,89 @@
+THE MACHINE
+GPU: NVIDIA H100 NVL; driver 595.91.07; 95830 MiB of memory, 0 MiB in use now
+  CUDA_VISIBLE_DEVICES is not set, CUDA_DEVICE_ORDER is not set
+  /usr/bin/nvidia-smi was asked about GPU 0, and is asked for its memory in use once a second while cp_prove runs
+  nvidia-smi numbers GPUs by PCI bus; CUDA does so only with CUDA_DEVICE_ORDER=PCI_BUS_ID. On a machine with GPUs of
+  different models the programs may take another GPU than the one described and sampled here. To be sure, set
+  CUDA_DEVICE_ORDER=PCI_BUS_ID
+CPUs that this process may use: 40 (0-39)
+the GPU's NUMA node: 0 (CPUs 0-39); 40 of this process's CPUs are on it
+host memory: 337.8 GB; this container's limit: 324.3 GB; available now, with file cache counted as available: 323.8 GB
+transparent huge pages (/sys/kernel/mm/transparent_hugepage/enabled): always [madvise] never; -huge-pages: not given
+free room on the work directory's file system, where the proofs will lie: 46.2 GB
+version (the file VERSION beside this script's directory): 0.16.0
+sha256 c52fbfda4d2cbcbe179671917af59ddbd881fec3012c9b505feaf5b120e42cb0  cp_prove
+sha256 fdffe6967fc1850b5f983f535da3e066490e015f0deb77d2c5e8f13be29e92c4  cp_verify
+sha256 e55e91cef415eb0f8c4a7fb4b7c1a8af11ef3e308e986681fd9e7b697ccb5cb3  policy.txt
+sha256 1c3191164c5113fd04d5108a469d7b3d17f4ccb3256e8a676d15bdc94435b919  KL.bin
+sha256 ec0cf9381b1f90faf5461cf07cda1ae09c50dd61fe4f2f88ec26e6b2c9f89954  layout.txt
+
+THE REQUESTS
+72 windows of 2048 token ids below 202048, drawn by this script's rule from the seed 1.
+Each asks only for the token after its window (r = 2047, e = 2048).
+All 72 are submitted to /home/tester/mr-t2048-b24/spool; this script's copies are in /home/tester/mr-t2048-b24/requests.
+
+BEFORE THE START
+- This run uses up 3 of the commitment's batches for good. cp_commit's line "the limit:" says how many a leaf table serves.
+- Measure on a commitment that was made for the measurement and serves nobody, on synthetic weights or a public model's
+  files: with secret weights it is a further commitment to the same weights, which our judgement on weight hiding
+  covers only on thin evidence and on conditions of its own (driver/README.md, "The rate").
+- This script reads nothing in the secret key directory, so it cannot see whether a service is using it. It relies on
+  cp_prove's own lock: a second cp_prove on a directory in use does not start. That lock cannot see a cp_prove on a copy
+  of the directory, or one on another machine that shares it, unless the file system applies the lock between machines.
+  It may also miss one that reaches the directory by another route on the same machine (through a container's layer,
+  from a virtual machine, or by a second mount). See docs/service.md, "What cp_prove does at startup".
+- The work directory will hold the requests, the responses and both programs' output. Keep it as secret as the secret
+  key directory: this script removes none of it.
+- All times are this machine's own clock.
+- To stop early, press Ctrl-C once. The script then creates the service's stop file and waits for cp_prove to end by
+  itself. Do not kill cp_prove: any end but exit code 0 puts the commitment under docs/faults.md, "Always first".
+
+THE SERVICE
+HOME=/home/tester/mr-t2048-b24/home TMPDIR=/home/tester/mr-t2048-b24/tmp \
+  /home/tester/FlashProve/prover/build/hc/cp_prove -isk /tmp/tmp.cTYTnigy2L/example/isk -spool /home/tester/mr-t2048-b24/spool -batch 24 -in-step 6 -most-batches 3 -memory lean,tensor-rooms=8
+Its output goes to /home/tester/mr-t2048-b24/cp_prove.txt.
+cp_prove is process 1224770.
+33.6 s after cp_prove's start: the first batch has started
+324.6 s after cp_prove's start: 24 of 72 requests have a response
+615.0 s after cp_prove's start: 48 of 72 requests have a response
+903.2 s after cp_prove's start: 72 of 72 requests have a response
+
+THE CHECKS
+72 proofs, one whole call of cp_verify each, 6 side by side, each with -j 4; their output goes to /home/tester/mr-t2048-b24/checks.
+cp_verify has ended on 24 of 72 proofs
+cp_verify has ended on 48 of 72 proofs
+cp_verify has ended on 72 of 72 proofs
+
+THE TIMES, in seconds since 1970 by this machine's clock
+cp_prove was started at 1795498736.760668570 and seen ended at 1795499672.987810946.
+start: when this script saw the batch's first request gone from in/. RELEASE: the latest change time of the batch's files.
+Two more readings of that clock at the release enter no figure: stamp, the modification time that cp_prove itself gives
+the files, and seen, this script's own reading when it first saw the batch's last response.
+batch requests  start                 RELEASE               stamp                 seen                
+    1       24  1795498770.372508511  1795499061.299740891  1795499059.349000000  1795499061.367599846
+    2       24  1795499059.361486220  1795499351.707641251  1795499349.746000000  1795499351.776328615
+    3       24  1795499349.769569357  1795499640.013133161  1795499638.047000000  1795499640.050611432
+NOTE: batch 1: seen and stamp lie 2.018 s apart, more than 2 s.
+NOTE: batch 2: seen and stamp lie 2.030 s apart, more than 2 s.
+NOTE: batch 3: seen and stamp lie 2.003 s apart, more than 2 s.
+These should be readings of one clock: find out why they differ before you rely on a figure of this run.
+
+THE FIGURES
+STEADY RATE: 169.86 tokens a second, that is 12.056 seconds a request
+  24 requests a batch, 6 in one pass over the weights; 2048 tokens a request, all of them counted; each proof checks one
+  token, the one after its window; -public-weights not given
+  the intervals between releases, s: 290.407900360 288.305491910
+  their mean: 289.356696135 s; 24 x 2048 tokens / that mean = the rate, cut after two places and not rounded
+rate from the first batch's start to the last release: 169.55 tokens a second
+rate with start-up, from cp_prove's start to the last release: 163.25 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.6 s
+a request's wait, from its batch's start to its release, s: least 290.2, mean 291.1, most 292.3
+from the last release to cp_prove's end: 32.9 s
+the GPU's memory in use, sampled once a second: the largest of 893 samples is 95261 MiB; 1 got no answer; 922.4 s after cp_prove's start a call of nvidia-smi (process 1232311) had not answered after 10 s: the script left it alone and calls nvidia-smi no more, so a later peak is not seen
+host memory, the largest resident set of cp_prove: 265.6 GB
+a proof's size, MB: least 24.46, mean 24.48, most 24.50
+requests: 72 served with a proof, 0 failed, 0 without a response
+cp_verify: 72 accepted, 0 not accepted, 0 not checked
+  a call's seconds, with 6 side by side: least 24.0, mean 24.3, most 24.6; all calls together: 293.1 s
+
+These lines are in /home/tester/mr-t2048-b24/report.txt, and every time that they rest on in /home/tester/mr-t2048-b24/figures.json.

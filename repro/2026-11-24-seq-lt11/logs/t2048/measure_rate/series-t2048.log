@@ -1,0 +1,57 @@
+### 2026-11-24T05:03:52Z series t2048 begins; work dir /tmp/tmp.cTYTnigy2L/example
+### 2026-11-24T05:03:52Z single * begins
+ls: cannot access '/home/tester/single-t2048/*/*.req': No such file or directory
+=== single-*: 0 request(s) from /home/tester/single-t2048/*, options:   2026-11-24T05:03:52Z
+cp_prove exit 1, wall 1.006039797 s, peak RSS 920 kB  2026-11-24T05:03:53Z
+ls: cannot access '/tmp/tmp.cTYTnigy2L/example/out-single-*': No such file or directory
+  *: NO PROOF ()
+### 2026-11-24T05:03:53Z single * ends
+### 2026-11-24T05:03:53Z measure_rate batch 1 x 3 begins
+measure_rate exit 0
+STEADY RATE: 80.93 tokens a second, that is 25.303 seconds a request
+rate with start-up, from cp_prove's start to the last release: 55.55 tokens a second
+start-up, from cp_prove's start to the first batch's start: 34.2 s
+requests: 3 served with a proof, 0 failed, 0 without a response
+cp_verify: 3 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:06:41Z measure_rate batch 1 x 3 ends
+### 2026-11-24T05:06:41Z measure_rate batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 155.54 tokens a second, that is 13.166 seconds a request
+rate with start-up, from cp_prove's start to the last release: 140.55 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.8 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:14:43Z measure_rate batch 8 x 3 ends
+### 2026-11-24T05:14:43Z padded reqs-L0512: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 151.61 tokens a second, that is 13.508 seconds a request
+rate with start-up, from cp_prove's start to the last release: 137.59 tokens a second
+start-up, from cp_prove's start to the first batch's start: 32.9 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:22:51Z padded reqs-L0512 ends
+### 2026-11-24T05:22:51Z padded reqs-L1024: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 153.62 tokens a second, that is 13.331 seconds a request
+rate with start-up, from cp_prove's start to the last release: 139.76 tokens a second
+start-up, from cp_prove's start to the first batch's start: 32.0 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:30:54Z padded reqs-L1024 ends
+### 2026-11-24T05:30:54Z padded reqs-L2048: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 155.10 tokens a second, that is 13.203 seconds a request
+rate with start-up, from cp_prove's start to the last release: 140.71 tokens a second
+start-up, from cp_prove's start to the first batch's start: 32.7 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:38:55Z padded reqs-L2048 ends
+### 2026-11-24T05:38:55Z measure_rate batch 24 x 3 begins
+measure_rate exit 0
+STEADY RATE: 169.86 tokens a second, that is 12.056 seconds a request
+rate with start-up, from cp_prove's start to the last release: 163.25 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.6 s
+requests: 72 served with a proof, 0 failed, 0 without a response
+cp_verify: 72 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T05:59:27Z measure_rate batch 24 x 3 ends
+### 2026-11-24T05:59:27Z series t2048 ends
