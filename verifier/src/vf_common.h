@@ -702,8 +702,11 @@ static bool policyNamedRead(const char *text, PolicyNamed &p) {
   }
   return p.given = true;
 }
+// Experiment seq-lt11 (repro/2026-11-24-seq-lt11): scales/tests/table_ties.py looks at the rotary
+// tables up to 2^11 positions for base 500000 and finds them above the same floors as at 2^10; at
+// base 10000 the positions from 1,024 on fall below the floor on the margin, so that base keeps lt 10.
 static constexpr bool rotaryServed(u64 theta0, u64 dh, u64 lt) {
-  return (theta0 == 10000 || theta0 == 500000) && dh <= 128 && lt <= 10;
+  return dh <= 128 && ((theta0 == 10000 && lt <= 10) || (theta0 == 500000 && lt <= 11));
 }
 static string servedForm(const Served &s) {
   const std::pair<bool, const char *> clause[] = {{s.experts, "routed-experts"},

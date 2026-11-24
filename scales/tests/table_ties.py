@@ -15,9 +15,11 @@ very near a tie, k + 1/2.
 
 This script looks at EVERY entry of every table that the standard parameter form admits
 (verifier/docs/parameter-file.md, the conditions softmax-table and rotary-table): cs 12; theta0
-10,000 and 500,000; dh a power of two up to 128; T up to 1,024; S 12, rx 8; eg 8 with smax 4,095.
-The rotary tables for dh 128 and T 1,024 hold those for every smaller dh and T: pair i of dh has
-the angle of pair i * 128 / dh. For each entry the script
+10,000 and 500,000; dh a power of two up to 128; T up to 1,024 at base 10,000 and up to 2,048 at
+base 500,000 (experiment seq-lt11, repro/2026-11-24-seq-lt11: at base 10,000 the positions from
+1,024 on fall below the floor on the margin); S 12, rx 8; eg 8 with smax 4,095.
+The rotary tables for dh 128 and the largest T hold those for every smaller dh and T: pair i of dh
+has the angle of pair i * 128 / dh. For each entry the script
 
   1. carries out the procedure by its own lines below, with correctly rounded functions: Python's
      decimal at 60 digits, rounded once to binary64. These lines are the judge;
@@ -221,11 +223,11 @@ def looked_at(w, t):
     return found
 
 
-for theta0, least, units in ((10000, 2.0e-6, 100000), (500000, 9.3e-8, 2500)):
+for theta0, least, units, positions in ((10000, 2.0e-6, 100000, 1024), (500000, 9.3e-8, 2500, 2048)):
     distance, margin, changed, otherwise, judge = NOWHERE, NOWHERE, dict.fromkeys(UNITS, 0), 0, {}
     for i in range(64):
         w = power(theta0, i)
-        for t in range(1024):
+        for t in range(positions):
             here = looked_at(w, t)
             others = {(k, a): looked_at(moved(w, a), t) for k in UNITS for a in (-k, k)}
             for which in (0, 1):
@@ -240,14 +242,14 @@ for theta0, least, units in ((10000, 2.0e-6, 100000), (500000, 9.3e-8, 2500)):
                     )
     differing = (0, "")
     for dh in (128, 64, 32, 16, 8, 4, 2):
-        cosines, sines = policy_tables.rotary_tables(1024, dh, 12, theta0)
+        cosines, sines = policy_tables.rotary_tables(positions, dh, 12, theta0)
         for which, theirs in ((1, cosines), (0, sines)):
             pairs = dh // 2
-            ours = [judge[which, t, i * 64 // pairs] for t in range(1024) for i in range(pairs)]
+            ours = [judge[which, t, i * 64 // pairs] for t in range(positions) for i in range(pairs)]
             where = "%s(%%d, %%d) at dh %d" % ("SC"[which], dh)
             more = unlike(ours, theirs, lambda n: where % divmod(n, pairs))
             differing = (differing[0] + more[0], more[1] or differing[1])
-    name = "rotary tables, theta0 %d" % theta0
+    name = "rotary tables, theta0 %d, %d positions" % (theta0, positions)
     told(name, len(judge), distance, margin, changed, differing, otherwise)
     ask(distance[0] >= least and margin[0] >= units, name + ": below the floors")
 value, d, one_unit = looked_at(power(3675548936, 1), 689)[1]
