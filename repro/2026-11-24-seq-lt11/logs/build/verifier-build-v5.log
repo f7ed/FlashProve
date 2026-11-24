@@ -1,0 +1,7 @@
+build started Tue Nov 24 00:32:27 UTC 2026
+build.sh: note: another account may be able to change /home/tester/FlashProve (its group or others can write in it, and it has no sticky bit), under which this checkout lies, and so could change what is built, and this script itself; for a build that no other account can touch, keep the checkout below directories that only you can write in; if /home/tester/FlashProve is yours, close it with chmod go-w
+build=1a99fe99dc5f668f07ad5d06e8652ea03a29af8388b912a6bd3fb41e28e3a63f dw=8
+compiling cp_verify.cpp: one compiler call of one to two minutes, which prints nothing while it runs
+build.sh: overwrote the cp_verify that was already in /home/tester/FlashProve/bin. To keep a cp_verify from elsewhere, build into another directory: end the call with "- DIRECTORY"
+THE VERIFIER IS BUILT: /home/tester/FlashProve/bin/cp_verify
+exit code 0
