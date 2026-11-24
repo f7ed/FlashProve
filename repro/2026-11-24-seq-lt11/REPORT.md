@@ -200,7 +200,7 @@ prover/examples/run_target_example.sh target_full_f2_lt11 "$WORK"
 | `covered:` 里的 `r=` 和 `e=` | `r=2047 e=2048`（`tokens=none y=yes`：只证明窗口后的下一个 token） |
 | 证明的答案 | token 98477；key 3,293,304 字节，entry 2,943,288 字节，proof 24,464,564 字节（T = 1,024：18,785,436） |
 | `cp_prove` 用时 | 约 66 秒，含启动（请求文件 04:49:05 放好，proof 04:50:11 写完） |
-| `cp_verify` 用时 | 约 61 秒，单线程（04:50:12–04:51:13） |
+| `cp_verify` 用时 | 约 32 秒，单线程（阶段 key 1.4 s、leaf 1.0 s、request 29.4 s；T = 1,024：1.7 / 1.3 / 21.2 s）。日志文件的时间戳相差 61 秒，多出的约 30 秒是 `cp_prove` 写完 proof 以后释放 237 GB 锁定内存的退出时间 |
 
 `commitment:`、`proof of work:` 和 `result-v1` 开头的几行：
 
@@ -237,6 +237,30 @@ proof of work: up to 32 bits counted in 71 rounds; with it the least round has 1
 | 主机内存峰值（`MemTotal − MemAvailable`） | 268,767,996 kB（约 269 GB） |
 
 显存峰值离这张卡的上限只差约 3.5 GB。在 80 GB 的卡上，同一个程序在 key 文件阶段的显存样本是约 75 GB（被抢占的尝试里测到的）：那张卡放得下承诺阶段，`cp_prove` 阶段是否放得下没有测到。
+
+
+### 单请求，不同的覆盖长度（T = 2,048）
+
+exact-match 策略下，被覆盖的每个 token 必须是模型在它前面所有 token 之后的首选，否则 `cp_prove` 不写 proof，只写一个空的 `.failed` 文件。我们没有工具在 T = 2,048 下生成新的首选序列。所以请求用 T = 1,024 的 `own_choices.req`（24 个 token 的提示词 + 1,000 个首选 token）后面补 1,024 个 token 0 做成，只改 e（覆盖到哪个位置）。假设是：位置 < 1,024 的首选不随 T 变。
+
+每个请求单独一次 `cp_prove -in -out`（一个 batch，1 个请求），然后一次 `cp_verify`。时间是进程从启动到退出的墙钟时间（`measure.sh`，每秒读一次 `/proc/<pid>/status` 的 `VmHWM` 作为峰值 RSS）。
+
+| 请求 | 覆盖的 token 数 | `cp_prove` 墙钟 | `cp_prove` 峰值 RSS | 结果 | proof 字节 | `cp_verify` 墙钟 | `cp_verify` 峰值 RSS |
+|---|---|---|---|---|---|---|---|
+| own_r23_e124 | 100（位置 24–123） | 100.4 s | 254,157,756 kB | `YES` | 24,478,108 | 30.1 s | 41,340 kB |
+| own_r23_e224 | 200 | 99.4 s | 254,156,272 kB | `YES` | 24,491,100 | 30.1 s | 40,952 kB |
+| own_r23_e524 | 500 | 100.4 s | 254,158,912 kB | `YES` | 24,479,268 | 30.1 s | 41,304 kB |
+| own_r23_e1024 | 1,000 | 98.4 s | 254,155,080 kB | `.failed`，没有 proof | — | — | — |
+| synthetic_next | 0（只问 y） | 100.4 s | 254,161,340 kB | `YES`，y = 98477 | 24,476,356 | 30.1 s | 41,116 kB |
+
+结论：
+
+- 覆盖 100、200、500 个 token 的时间和只问下一个 token 的时间一样（约 100 秒，差别小于 1 秒）。proof 大小的差别小于 0.1%。这和文档的说法一致：主要开销是对整个窗口做 prefill 和证明，覆盖多少 token 几乎不影响。
+- 覆盖 1,000 个时失败。所以 T = 1,024 的首选序列在位置 524 到 1,023 之间的某一处，在 T = 2,048 下不再是首选。前 524 个位置一致。原因我们没有查：可能是注意力或归一化的某个整数运算和 T 有关。这是一个待查的问题，不影响其他测量。
+- `cp_prove` 的 100 秒里，proof 在约 66 秒时写出（示例运行的文件时间戳），其余约 34 秒是进程退出时释放锁定内存。`cp_prove` 的峰值 RSS 约 254 GB，和 `cp_commit` 锁定的 236.9 GB 权重加工作内存相符。
+- `cp_verify` 的峰值 RSS 只有约 41 MB。
+
+日志和 CSV：[logs/t2048/single/](logs/t2048/single/)。
 
 ## 费用
 

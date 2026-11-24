@@ -1,0 +1,45 @@
+### 2026-11-24T04:53:04Z series t2048 begins; work dir /tmp/tmp.cTYTnigy2L/example
+### 2026-11-24T04:53:04Z single own_r23_e1024 begins
+=== single-own_r23_e1024: 1 request(s) from /home/tester/single-t2048/own_r23_e1024, options:   2026-11-24T04:53:04Z
+cp_prove exit 0, wall 98.434386175 s, peak RSS 254155080 kB  2026-11-24T04:54:43Z
+  own_r23_e1024: NO PROOF (own_r23_e1024.failed )
+### 2026-11-24T04:54:43Z single own_r23_e1024 ends
+### 2026-11-24T04:54:43Z single own_r23_e124 begins
+=== single-own_r23_e124: 1 request(s) from /home/tester/single-t2048/own_r23_e124, options:   2026-11-24T04:54:43Z
+cp_prove exit 0, wall 100.424119283 s, peak RSS 254157756 kB  2026-11-24T04:56:23Z
+  own_r23_e124: proof 24478108 bytes, y 0, cp_verify exit 0 in 30.133323118 s (peak RSS 41340 kB): YES
+### 2026-11-24T04:56:53Z single own_r23_e124 ends
+### 2026-11-24T04:56:53Z single own_r23_e224 begins
+=== single-own_r23_e224: 1 request(s) from /home/tester/single-t2048/own_r23_e224, options:   2026-11-24T04:56:53Z
+cp_prove exit 0, wall 99.419755355 s, peak RSS 254156272 kB  2026-11-24T04:58:33Z
+  own_r23_e224: proof 24491100 bytes, y 0, cp_verify exit 0 in 30.132785384 s (peak RSS 40952 kB): YES
+### 2026-11-24T04:59:03Z single own_r23_e224 ends
+### 2026-11-24T04:59:03Z single own_r23_e524 begins
+=== single-own_r23_e524: 1 request(s) from /home/tester/single-t2048/own_r23_e524, options:   2026-11-24T04:59:03Z
+cp_prove exit 0, wall 100.421742462 s, peak RSS 254158912 kB  2026-11-24T05:00:43Z
+  own_r23_e524: proof 24479268 bytes, y 0, cp_verify exit 0 in 30.129849689 s (peak RSS 41304 kB): YES
+### 2026-11-24T05:01:13Z single own_r23_e524 ends
+### 2026-11-24T05:01:13Z single synthetic_next begins
+=== single-synthetic_next: 1 request(s) from /home/tester/single-t2048/synthetic_next, options:   2026-11-24T05:01:13Z
+cp_prove exit 0, wall 100.426547027 s, peak RSS 254161340 kB  2026-11-24T05:02:54Z
+  synthetic_next: proof 24476356 bytes, y 98477, cp_verify exit 0 in 30.134150158 s (peak RSS 41116 kB): YES
+### 2026-11-24T05:03:24Z single synthetic_next ends
+### 2026-11-24T05:03:24Z measure_rate batch 1 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z measure_rate batch 1 x 3 ends
+### 2026-11-24T05:03:24Z measure_rate batch 8 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z measure_rate batch 8 x 3 ends
+### 2026-11-24T05:03:24Z padded reqs-L0512: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z padded reqs-L0512 ends
+### 2026-11-24T05:03:24Z padded reqs-L1024: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z padded reqs-L1024 ends
+### 2026-11-24T05:03:24Z padded reqs-L2048: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z padded reqs-L2048 ends
+### 2026-11-24T05:03:24Z measure_rate batch 24 x 3 begins
+measure_rate exit 1
+### 2026-11-24T05:03:24Z measure_rate batch 24 x 3 ends
+### 2026-11-24T05:03:24Z series t2048 ends
