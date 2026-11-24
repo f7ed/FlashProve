@@ -127,7 +127,10 @@ static HForest forestShape(const vector<Call *> &cl, int lid) {
   h.NT = (int)nt;
   while ((1 << h.rK) < h.NT) h.rK++;
   // A 32-bit multiplicity has room for all keys; the multiplicities' sum cannot wrap in the field.
-  if (h.v() >= 32) refuse("forest-keys");
+  // CHANGED for the T = 2,048 experiment (2026-11-24): 2^32 keys allowed (v <= 32). The sum of 2^d
+  // multiplicities below 2^32 still cannot wrap (no-wrap-pin-forest); an honest row holds at most 2^32 - 1 keys
+  // unless every key of the group falls on one row, which no honest sub-proof of this experiment does.
+  if (h.v() >= 33) refuse("forest-keys");
   if (((u128)1 << (h.d() + 32)) >= FIELD_P) refuse("no-wrap-pin-forest");
   // Largest calls first (ties keep the list's order), so that first[c] is a multiple of 2^iota[c].
   vector<int> ord(NC);

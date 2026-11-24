@@ -671,7 +671,7 @@ inline void plan_lookup(Plan &p, const std::string &where, const LookupSize &cal
   const std::vector<unsigned> parts = x.parts.empty() ? std::vector<unsigned>{x.v} : x.parts;
   Big keys(0);
   for (unsigned v : parts) keys = keys + Big::two_to(v);
-  if (x.mu < 1 || x.mu > 6 || w < 2 || w > slots || !(keys < Big::two_to(w)) || !(Big::two_to(x.d) * (Big::two_to(w) - Big(1)) < p.set.p))
+  if (x.mu < 1 || x.mu > 6 || w < 2 || w > slots || !(keys < Big::two_to(w) + Big(1)) /* CHANGED for the T = 2,048 experiment (2026-11-24): 2^w keys allowed, as in verifier/src/vf_lookup_argument.h */ || !(Big::two_to(x.d) * (Big::two_to(w) - Big(1)) < p.set.p))
     return p.refuse(where + ": the look-up's sizes are not admitted");
   if (x.shifted) plan_shift(p, where, (u64)1 << x.d);
   MayLay::close(p, R_LKP, where, RoundKind::ALGEBRAIC, ErrorKind::FIELD, Bound::ratio(keys - Big(1), p.set.card_E()), Priced::ON_THE_CALLERS_WORD, draws(1));  // the keys: checked later, as the run follows the trees' rounds

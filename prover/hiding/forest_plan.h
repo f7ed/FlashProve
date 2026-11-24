@@ -99,7 +99,8 @@ inline ForestPlan forest_plan(const std::vector<ForestCall> &calls, int lidb) {
   // A limit of this engine, not of the format: Forest::last() needs at least 2^17 keys in a tree.
   if (p.dT < 17) refuse("this engine wants trees of 2^17 keys or more; log2 of a tree's keys", p.dT);
   // 32 bits hold any multiplicity, and the multiplicities' sum cannot wrap around in the field.
-  if (p.v() > 31) refuse("a group has fewer than 2^32 keys, the trees of padding counted; log2 of them", p.v());
+  // CHANGED for the T = 2,048 experiment (2026-11-24): v <= 32 allowed, as in verifier/src/vf_lookup_argument.h.
+  if (p.v() > 32) refuse("a group has at most 2^32 keys, the trees of padding counted; log2 of them", p.v());
   if (((unsigned __int128)1 << (p.d() + 32)) >= FIELD_P) refuse("the tables of a group have too many rows; log2 of them", p.d()); // FIELD_P: the field's prime, 2^64 - 2^32 + 1
   // A limit of this engine: a point has at most MAXV = 32 coordinates (pt_transcript.h).
   if (p.d() + 5 > 31) refuse("this engine takes kT + cK + 5 up to 31", p.d() + 5);
