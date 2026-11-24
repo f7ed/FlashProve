@@ -1,0 +1,75 @@
+### 2026-11-24T06:34:41Z series t1024 begins; work dir /tmp/tmp.ItjWh9iHce/example
+### 2026-11-24T06:34:41Z single own_r23_e1024 begins
+=== single-t1024-own_r23_e1024: 1 request(s) from /home/tester/single-t1024/own_r23_e1024, options:   2026-11-24T06:34:41Z
+cp_prove exit 0, wall 95.407757659 s, peak RSS 254146772 kB  2026-11-24T06:36:17Z
+  own_r23_e1024: proof 18785804 bytes, y 52599, cp_verify exit 0 in 20.088287682 s (peak RSS 41084 kB): YES
+### 2026-11-24T06:36:37Z single own_r23_e1024 ends
+### 2026-11-24T06:36:37Z single own_r23_e124 begins
+=== single-t1024-own_r23_e124: 1 request(s) from /home/tester/single-t1024/own_r23_e124, options:   2026-11-24T06:36:37Z
+cp_prove exit 0, wall 96.413262459 s, peak RSS 254143216 kB  2026-11-24T06:38:13Z
+  own_r23_e124: proof 18779228 bytes, y 0, cp_verify exit 0 in 20.087676709 s (peak RSS 40984 kB): YES
+### 2026-11-24T06:38:33Z single own_r23_e124 ends
+### 2026-11-24T06:38:33Z single own_r23_e224 begins
+=== single-t1024-own_r23_e224: 1 request(s) from /home/tester/single-t1024/own_r23_e224, options:   2026-11-24T06:38:33Z
+cp_prove exit 0, wall 96.416685057 s, peak RSS 254143920 kB  2026-11-24T06:40:10Z
+  own_r23_e224: proof 18762996 bytes, y 0, cp_verify exit 0 in 20.086070284 s (peak RSS 41060 kB): YES
+### 2026-11-24T06:40:30Z single own_r23_e224 ends
+### 2026-11-24T06:40:30Z single own_r23_e524 begins
+=== single-t1024-own_r23_e524: 1 request(s) from /home/tester/single-t1024/own_r23_e524, options:   2026-11-24T06:40:30Z
+cp_prove exit 0, wall 96.410113947 s, peak RSS 254143792 kB  2026-11-24T06:42:06Z
+  own_r23_e524: proof 18762740 bytes, y 0, cp_verify exit 0 in 20.089842200 s (peak RSS 41052 kB): YES
+### 2026-11-24T06:42:26Z single own_r23_e524 ends
+### 2026-11-24T06:42:26Z single synthetic_next begins
+=== single-t1024-synthetic_next: 1 request(s) from /home/tester/single-t1024/synthetic_next, options:   2026-11-24T06:42:26Z
+cp_prove exit 0, wall 96.412656238 s, peak RSS 254145068 kB  2026-11-24T06:44:03Z
+  synthetic_next: proof 18773940 bytes, y 50502, cp_verify exit 0 in 20.089356017 s (peak RSS 41016 kB): YES
+### 2026-11-24T06:44:23Z single synthetic_next ends
+### 2026-11-24T06:44:23Z measure_rate batch 1 x 3 begins
+measure_rate exit 0
+STEADY RATE: 48.44 tokens a second, that is 21.139 seconds a request
+rate with start-up, from cp_prove's start to the last release: 31.64 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.6 s
+requests: 3 served with a proof, 0 failed, 0 without a response
+cp_verify: 3 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T06:46:50Z measure_rate batch 1 x 3 ends
+### 2026-11-24T06:46:50Z measure_rate batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 120.37 tokens a second, that is 8.507 seconds a request
+rate with start-up, from cp_prove's start to the last release: 102.94 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.7 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T06:52:28Z measure_rate batch 8 x 3 ends
+### 2026-11-24T06:52:28Z padded reqs1024-L0256: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 117.88 tokens a second, that is 8.686 seconds a request
+rate with start-up, from cp_prove's start to the last release: 101.46 tokens a second
+start-up, from cp_prove's start to the first batch's start: 32.6 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T06:58:09Z padded reqs1024-L0256 ends
+### 2026-11-24T06:58:09Z padded reqs1024-L0512: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 119.08 tokens a second, that is 8.598 seconds a request
+rate with start-up, from cp_prove's start to the last release: 101.93 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.6 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T07:03:49Z padded reqs1024-L0512 ends
+### 2026-11-24T07:03:49Z padded reqs1024-L1024: measure_rate --requests, batch 8 x 3 begins
+measure_rate exit 0
+STEADY RATE: 120.31 tokens a second, that is 8.510 seconds a request
+rate with start-up, from cp_prove's start to the last release: 103.02 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.3 s
+requests: 24 served with a proof, 0 failed, 0 without a response
+cp_verify: 24 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T07:09:27Z padded reqs1024-L1024 ends
+### 2026-11-24T07:09:27Z measure_rate batch 24 x 3 begins
+measure_rate exit 0
+STEADY RATE: 138.79 tokens a second, that is 7.377 seconds a request
+rate with start-up, from cp_prove's start to the last release: 130.02 tokens a second
+start-up, from cp_prove's start to the first batch's start: 33.5 s
+requests: 72 served with a proof, 0 failed, 0 without a response
+cp_verify: 72 accepted, 0 not accepted, 0 not checked
+### 2026-11-24T07:22:45Z measure_rate batch 24 x 3 ends
+### 2026-11-24T07:22:45Z series t1024 ends
